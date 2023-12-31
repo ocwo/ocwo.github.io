@@ -1,0 +1,151 @@
+<title>random advertisement gen</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+}
+
+pre {
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 2ex;
+    margin: 2ex;
+    width: min-content;
+    border-radius: 1ex;
+    border-right: solid 3px rgba(255, 255, 255, 0.5);
+    border-left: solid 3px rgba(255, 255, 255, 0.5);
+    transition: all 1s cubic-bezier(0,.75,.75,1);
+}
+
+pre:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(255, 237, 214);
+    box-shadow: 0px 0px 5px 10px rgba(0,0,0, .1), 0 0 100vh 0 rgba(255, 237, 214, .1);
+    border: solid 1px rgba(255, 255, 255, 0.0001);
+}
+
+pre::selection {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+pre:hover::selection {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+</style>
+<script>
+const randomCase = str => {
+    const cases = [
+        str => str.toLowerCase(),
+        str => str.toUpperCase(),
+        str => str.replace(/\b\w/g, c => c.toUpperCase())
+    ];
+
+    const randomIndex = Math.floor(Math.random() * cases.length);
+    return cases[randomIndex](str);
+};
+const getRandomItem = arr => randomCase(arr[Math.floor(Math.random() * arr.length)]);
+function generateRandomVersion() {
+    const major = 1;
+    const minor = 20;
+    const randomPatch = Math.floor(Math.random() * 4) + 1;
+
+    const versionOptions = [
+        `${major}.${minor}.${randomPatch}`,
+        `${major}.${minor}`,
+        `${major}.${minor}.x`,
+        `${major}.${minor}${Math.random() > 0.5 ? '-' : ' - '}${major}.${minor}.${randomPatch}`,
+    ];
+
+    const randomIndex = Math.floor(Math.random() * versionOptions.length);
+
+    return versionOptions[randomIndex];
+}
+function generateRandomPlayerCount() {
+    const randomChoice = Math.floor(Math.random() * 3);
+
+    switch (randomChoice) {
+      case 0:
+            return randomCase(`any`);
+      case 1:
+            return Math.floor(Math.random() * 38) + 4;
+      case 2:
+            const x = Math.floor(Math.random() * 4) + 2;
+            const y = Math.floor(Math.random() * (38 - x)) + x + 1;
+            return `${x}${Math.random() > 0.5 ? '-' : ' - '}${y}`;
+    }
+}
+function generateRandomSessionTime() {
+    const z = Math.floor(Math.random() * 1) + 1;
+    const x = getRandomItem(hourFormats);
+    const w = z + Math.floor(Math.random() * (6 - z)) + 1;
+
+    const playerCountFormats = [
+        `${z}${Math.random() > 0.5 ? '' : ' '}${x}${Math.random() > 0.5 ? '' : ' '}+`,
+        `${z}${Math.random() > 0.5 ? '' : ' '}${x}`,
+        `${z}${Math.random() > 0.5 ? '-' : ' - '}${w}${Math.random() > 0.5 ? '' : ' '}${getRandomItem(hourFormats)}`
+    ];
+
+    return getRandomItem(playerCountFormats);
+};
+function generateRandomGametype() {
+    const randomGamemode = gamemodes[Math.floor(Math.random() * gamemodes.length)];
+    const randomGameModifier = Math.random() < 0.5 ? "" : gameModifiers[Math.floor(Math.random() * gameModifiers.length)];
+
+    return `${randomGamemode}${randomGameModifier ? ` ${randomGameModifier}` : ""}`;
+}
+
+const gamemodes = [`lifesteal`, `survival`, `creative`, `survival building`, `creative building`];
+const gameModifiers = [`smp`, `server`, `serv`];
+const hourFormats = [`h`, `hr`, `hrs`, `hours`, `hour`];
+
+function generate() {
+    let version, playerCount, sessionTime, gameType, ad;
+
+    version = `${randomCase("java")} ${generateRandomVersion()}`;
+    playerCount = generateRandomPlayerCount();
+    sessionTime = generateRandomSessionTime();
+    gameType = generateRandomGametype();
+
+    let identifiersBold = Math.random() > 0.85;
+    let answersBold = Math.random() > 0.5;
+    let isBlockQuoted = Math.random() > 0.75;
+    let hasExtraInfo = Math.random() > 0.5;
+    
+    if (hasExtraInfo) {
+        ad = `${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Java or Bedrock:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${version}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Realm/Server/World:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${randomCase("server")}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Number of players:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${playerCount}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Length of Play Session:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${sessionTime}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Gametype:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${gameType}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Language:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${randomCase("english")}${answersBold ? `` : `**`}`
+    } else {
+        ad = `${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Java or Bedrock (include version):${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${version}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Realm/Server/World (specify which, not a name):${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${randomCase("server")}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Number of players (if applicable):${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${playerCount}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Length of Play Session (MUST be actively playing):${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${sessionTime}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Gametype (specify if bedwars, survival, creative, etc):${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${gameType}${answersBold ? `` : `**`}
+${isBlockQuoted ? `` : `> `}${identifiersBold ? `` : `**`}Language:${identifiersBold ? `` : `**`} ${answersBold ? `` : `**`}${randomCase("english")}${answersBold ? `` : `**`}`
+    }
+
+    return ad;
+}
+function render(text) {
+    let element = document.createElement(`pre`);
+    document.body.appendChild(element);
+    element.textContent = text;
+}
+
+function main() {
+    let ad = generate();
+
+    render(ad);
+}
+
+window.onload = main;
+</script>
