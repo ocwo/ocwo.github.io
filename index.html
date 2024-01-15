@@ -1,0 +1,184 @@
+<title>random advertisement gen</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: rgb(17, 17, 22);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    display: flexbox;
+    flex-flow: column wrap;
+}
+
+button {
+    width: 100vw;
+    height: 100vh;
+    display: flexbox;
+    flex-flow: column wrap;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    font-size: x-large;
+}
+
+p {
+    display: block;
+    font-family: monospace;
+    color: white;
+}
+
+pre {
+    display: block;
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 2ex;
+    margin: 2ex;
+    width: min-content;
+    border-radius: 1ex;
+    border-right: solid 3px rgba(255, 255, 255, 0.5);
+    border-left: solid 3px rgba(255, 255, 255, 0.5);
+    transition: all 1s cubic-bezier(0,.75,.75,1);
+}
+
+pre:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgb(255, 237, 214);
+    box-shadow: 0px 0px 15px 1px rgba(0,0,0, .7), 0 0 100vh 0 rgba(255, 237, 214, .1);
+    border: solid 1px rgba(255, 255, 255, 0.0001);
+}
+
+pre::selection {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+pre:hover::selection {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+</style>
+<script>
+let text = ``
+
+const randomCase = str => {
+    const cases = [
+        str => str.toLowerCase(),
+        str => str.toUpperCase(),
+        str => str.replace(/\b\w/g, c => c.toUpperCase())
+    ];
+
+    return cases[Math.floor(Math.random() * 5) % 5 < 2 ? 0 : 1](str);
+};
+const getRandomItem = arr => randomCase(arr[Math.floor(Math.random() * arr.length)]);
+function generateRandomVersion() {
+    const major = 1;
+    const minor = 20;
+    const randomPatch = Math.floor(Math.random() * 4) + 1;
+
+    const versionOptions = [
+        `${major}.${minor}.${randomPatch}`,
+        `${major}.${minor}`,
+        `${major}.${minor}.x`,
+        `${major}.${minor}${Math.random() > 0.5 ? '-' : ' - '}${major}.${minor}.${randomPatch}`,
+    ];
+
+    const randomIndex = Math.floor(Math.random() * versionOptions.length);
+
+    return versionOptions[randomIndex];
+}
+function generateRandomPlayerCount() {
+    const randomChoice = Math.floor(Math.random() * 3);
+
+    switch (randomChoice) {
+      case 0:
+            return randomCase(`any`);
+      case 1:
+            return Math.round((Math.floor(Math.random() * 38) + 4) / 5) * 5;
+      case 2:
+            const x = Math.floor(Math.random() * 4) + 2;
+            const y = Math.round((Math.floor(Math.random() * (38 - x)) + x + 1) / 5) * 5;
+            return `${x}${Math.random() > 0.5 ? '-' : ' - '}${y}`;
+    }
+}
+function generateRandomSessionTime() {
+    const z = Math.floor(Math.random() * 1) + 1;
+    const x = getRandomItem(hourFormats);
+    const w = z + Math.floor(Math.random() * (6 - z)) + 1;
+
+    const playerCountFormats = [
+        `${z}${Math.random() > 0.5 ? '' : ' '}${x}${Math.random() > 0.5 ? '' : ' '}+`,
+        `${z}${Math.random() > 0.5 ? '' : ' '}${x}`,
+        `${z}${Math.random() > 0.5 ? '-' : ' - '}${w}${Math.random() > 0.5 ? '' : ' '}${getRandomItem(hourFormats)}`
+    ];
+
+    return getRandomItem(playerCountFormats);
+};
+function generateRandomGametype() {
+    const randomGamemode = gamemodes[Math.floor(Math.random() * gamemodes.length)];
+    const randomGameModifier = Math.random() < 0.5 ? "" : gameModifiers[Math.floor(Math.random() * gameModifiers.length)];
+
+    return `${randomGamemode}${randomGameModifier ? ` ${randomGameModifier}` : ""}`;
+}
+
+const gamemodes = [`lifesteal`, `survival`, `survival building`, `chill survival building`];
+const gameModifiers = [`smp`, `server`, `serv`];
+const hourFormats = [`h`, `hr`, `hrs`, `hours`, `hour`];
+
+function generate() {
+    let version, playerCount, sessionTime, gameType, ad;
+
+    version = `${randomCase("java")} ${generateRandomVersion()}`;
+    playerCount = generateRandomPlayerCount();
+    sessionTime = generateRandomSessionTime();
+    gameType = generateRandomGametype();
+
+    let identifiersEmphasis = Math.random() > 0.5;
+    let identifiersLevel = ["*", "**", "***"][Math.floor(Math.random() * 3)];
+    
+    let answersEmphasis = Math.random() > 0.5;
+    let answersLevel = ["*", "**", "***"][Math.floor(Math.random() * 3)];
+
+    let doubleReturn = Math.random() > 0.5;
+    let isBlockQuoted = Math.random() > 0.5;
+    let isBulleted = Math.random() > 0.5;
+
+    let hasExtraInfo = Math.random() > 0.5;
+    
+ad = `${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Java or Bedrock${hasExtraInfo ? `` : ` (include version)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${version}${answersEmphasis ? `` : answersLevel}${doubleReturn ? `` : `\n`}
+${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Realm/Server/World${hasExtraInfo ? `` : ` (specify which, not a name)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${randomCase("server")}${answersEmphasis ? `` : answersLevel}${doubleReturn ? `` : `\n`}
+${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Number of players${hasExtraInfo ? `` : ` (if applicable)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${playerCount}${answersEmphasis ? `` : answersLevel}${doubleReturn ? `` : `\n`}
+${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Length of Play Session${hasExtraInfo ? `` : ` (MUST be actively playing)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${sessionTime}${answersEmphasis ? `` : answersLevel}${doubleReturn ? `` : `\n`}
+${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Gametype${hasExtraInfo ? `` : ` (specify if bedwars, survival, creative, etc)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${gameType}${answersEmphasis ? `` : answersLevel}${doubleReturn ? `` : `\n`}
+${isBlockQuoted ? `` : `> `}${isBulleted ? `` : `- `}${identifiersEmphasis ? `` : identifiersLevel}Language${hasExtraInfo ? `` : ` (include version)`}:${identifiersEmphasis ? `` : identifiersLevel} ${answersEmphasis ? `` : answersLevel}${randomCase("english")}${answersEmphasis ? `` : answersLevel}`
+
+    return ad;
+}
+function render(text) {
+    let element = document.createElement(`pre`);
+    document.querySelector(`button`).appendChild(element);
+    element.textContent = text;
+}
+
+function main() {
+    let ad = generate();
+    text = ad;
+
+    render(ad);
+}
+
+function copy() {
+    navigator.clipboard.writeText(text);
+    document.querySelector(`p`).innerHTML += ` [done]`
+}
+
+
+
+window.onclick = copy;
+window.onload = main;
+</script>
+<body>
+<button><p>click anywhere to copy</p></button>
+</body>
