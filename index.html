@@ -113,8 +113,11 @@ function generateRandomSessionTime() {
         `${z}${Math.random() > 0.5 ? '' : ' '}${x}`,
         `${z}${Math.random() > 0.5 ? '-' : ' - '}${w}${Math.random() > 0.5 ? '' : ' '}${getRandomItem(hourFormats)}`
     ];
-
-    return getRandomItem(playerCountFormats);
+    const time = getRandomItem(playerCountFormats)
+    const lastChar = time.slice(-1);
+    const isNumberGreaterThanOne = !isNaN(parseInt(lastChar)) && parseInt(lastChar) > 1;
+    
+    return `${time}${isNumberGreaterThanOne ? `s` : ``}`;
 };
 function generateRandomGametype() {
     const randomGamemode = gamemodes[Math.floor(Math.random() * gamemodes.length)];
@@ -123,9 +126,9 @@ function generateRandomGametype() {
     return `${randomGamemode}${randomGameModifier ? ` ${randomGameModifier}` : ""}`;
 }
 
-const gamemodes = [`lifesteal`, `survival`, `survival building`, `chill survival building`];
-const gameModifiers = [`smp`, `server`, `serv`];
-const hourFormats = [`h`, `hr`, `hrs`, `hours`, `hour`];
+const gamemodes = [`lifesteal`, `survival`, `survival building`, `chill survival building`, `life steal`, `chill survival`];
+const gameModifiers = [`smp`, `server`, `serv`, `vanilla`, `semivanilla`, `semi-vanilla`, `grief protection`];
+const hourFormats = [`h`, `hr`, `hour`];
 
 function generate() {
     let version, playerCount, sessionTime, gameType, ad;
